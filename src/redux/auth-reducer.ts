@@ -1,9 +1,10 @@
-import {ResultCodeForCaptchaEnum, ResultCodesEnum} from "../api/api";
+import {ResultCodeForCapcthaEnum, ResultCodesEnum} from "../api/api";
 import {stopSubmit} from "redux-form";
+import {authAPI} from '../api/auth-api';
+import {securityAPI} from '../api/security-api';
 import {BaseThunkType, InferActionsTypes} from './redux-store';
+import {Action} from 'redux';
 import {FormAction} from 'redux-form/lib/actions';
-import {authAPI} from "../api/authAPI";
-import {securityAPI} from "../api/security-apiI";
 
 let initialState = {
     userId: null as (number | null),
@@ -49,7 +50,7 @@ export const login = (email: string, password: string, rememberMe: boolean, capt
         // success, get auth data
         dispatch(getAuthUserData())
     } else {
-        if (data.resultCode === ResultCodeForCaptchaEnum.CaptchaIsRequired) {
+        if (data.resultCode === ResultCodeForCapcthaEnum.CaptchaIsRequired) {
             dispatch(getCaptchaUrl());
         }
 
@@ -64,7 +65,7 @@ export const getCaptchaUrl = (): ThunkType => async (dispatch) => {
     dispatch(actions.getCaptchaUrlSuccess(captchaUrl))
 }
 
-export const logout = (): ThunkType => async (dispatch) => {
+export const logout = (): ThunkType => async (dispatch: any) => {
     let response = await authAPI.logout()
 
     if (response.data.resultCode === 0) {
